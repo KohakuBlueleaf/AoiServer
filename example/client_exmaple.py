@@ -1,3 +1,4 @@
+from multiprocessing import Process
 from aoiserver.client import AoiClient,AoiClient_an
 
 '''
@@ -20,5 +21,7 @@ while True:
 		print(f'self: {data}')
 		client.send(data)
 	except KeyboardInterrupt:
+		client.close()
 		break
-client.close()
+#client.close()
+

@@ -130,6 +130,11 @@ class AoiServer_an:
 		while True:
 			try:
 				data = (await recv(reader))
+				if data is None:
+					if writer.is_closing():
+						break
+					else:
+						continue
 			except ConnectionResetError:
 				break
 			except TypeError as e:
