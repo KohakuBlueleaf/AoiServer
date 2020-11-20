@@ -1,0 +1,4 @@
+build*
+aoiserver.egg*
+dist*
+*__pycache__*
