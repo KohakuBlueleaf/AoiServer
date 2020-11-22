@@ -1,27 +1,27 @@
-from multiprocessing import Process
-from aoiserver.client import AoiClient,AoiClient_an
+from aoiserver.client import AoiClient
+client = AoiClient(ip='127.0.0.1',port=32768)
 
-'''
-##Example for Normal server
-client = AoiClient(ip='127.0.0.1',port=32767)
-print(client.test())
-'''
-
-##Example for Announcement Server
-client = AoiClient_an(ip='127.0.0.1',port=32768)
-
-@client.set_handler
+@client.event
 def message_in(data):
-	name, recv_data = data
-	print(f'{name}: {recv_data}')
+	_, data = data
+	name, mes = data
+	print(f"{name}: {mes}")
+
+@client.transaction
+def message_transfer(ctx, message):
+	ctx.send(message)
+
+client.connect()
+suc = False
+while not suc:
+	user_name = input('請輸入用戶名稱: ')
+	group = input('請輸入群組號碼: ')
+	suc, state = client.login(user_name=user_name, group=group)
+	print(state)
 
 while True:
 	try:
-		data = input()
-		print(f'self: {data}')
-		client.send(data)
+		client.message_transfer(input())
 	except KeyboardInterrupt:
-		client.close()
 		break
-#client.close()
-
+client.close()
